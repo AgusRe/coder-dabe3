@@ -1,0 +1,19 @@
+{
+  "name": "coder-dabe3",
+  "version": "1.0.0",
+  "description": "Proyecto Desarrollo Backend 3 - Mocking y persistencia de datos",
+  "type": "module",
+  "scripts": {
+    "dev": "npx nodemon src/server.js",
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.1.1",
+    "bcrypt": "^5.1.0",
+    "@faker-js/faker": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}
