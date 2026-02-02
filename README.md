@@ -122,13 +122,16 @@ Confirmando así que los registros fueron correctamente insertados en MongoDB.
 
 ---
 
-## 👨‍💻 Autor
+## Instalación
 
-Proyecto desarrollado por **Agustín**  
-Curso: **Desarrollo Backend 3 – Coderhouse**
+1. Clonar el repositorio
+2. Ejecutar `npm install`
+3. Configurar variable de entorno MONGO_URL (opcional)
+4. Ejecutar `npm run dev`
 
 ---
 
-## 📄 Licencia
+## 👨‍💻 Autor
 
-Este proyecto fue desarrollado con fines educativos.
+Proyecto desarrollado por **Agustín Ré**  
+Curso: **Desarrollo Backend 3 – Coderhouse**
