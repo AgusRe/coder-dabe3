@@ -24,6 +24,8 @@ src/
 │
 ├── routes/
 │   └── mocks.router.js
+│   └── pets.router.js
+│   └── users.router.js
 │
 ├── mocks/
 │   ├── mockingUsers.js
@@ -40,8 +42,6 @@ src/
 └── server.js
 ```
 
-Esta estructura permite mantener el código desacoplado, reutilizable y escalable.
-
 ---
 
 ## 🧠 Objetivo del proyecto
@@ -56,6 +56,16 @@ El proyecto busca:
 
 ---
 
+## 🧩 Endpoints disponibles
+
+### `/api/mocks`
+
+- **GET** `/api/mocks/mockingpets`
+- **GET** `/api/mocks/mockingusers`
+- **POST** `/api/mocks/generateData`
+
+---
+
 ## 🧩 Funcionalidades principales
 
 ### 🔹 Router `/api/mocks`
@@ -65,7 +75,6 @@ Se creó un router específico para manejar todo lo relacionado al mocking de da
 #### 📌 GET `/api/mocks/mockingpets`
 
 - Devuelve una lista de mascotas mockeadas.
-- Endpoint migrado desde entregas anteriores.
 - No persiste datos en la base de datos.
 
 #### 📌 GET `/api/mocks/mockingusers`
@@ -111,23 +120,17 @@ Confirmando así que los registros fueron correctamente insertados en MongoDB.
 
 ---
 
-## 📌 Buenas prácticas aplicadas
-
-- Separación de responsabilidades
-- Código modular y reutilizable
-- Manejo centralizado de hashing
-- Uso de async/await
-- Manejo de errores
-- Arquitectura escalable
-
----
-
-## Instalación
+## ⚙️ Instalación
 
 1. Clonar el repositorio
 2. Ejecutar `npm install`
 3. Configurar variable de entorno MONGO_URL (opcional)
 4. Ejecutar `npm run dev`
+
+```bash
+npm install
+npm run dev
+```
 
 ---
 
