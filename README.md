@@ -1,4 +1,4 @@
-# 📦 Desarrollo Backend 3 – Mocking & Testing API
+# 📦 Desarrollo Backend 3 – Testing y Escalabilidad Backend
 
 Este proyecto forma parte de la cursada **Desarrollo de Backend 3** (Coderhouse) y tiene como objetivo profundizar el diseño de APIs profesionales utilizando **Node.js**, **Express** y **MongoDB**, aplicando buenas prácticas de arquitectura, modularización, mocking de datos y persistencia en base de datos.
 
