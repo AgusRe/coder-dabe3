@@ -1,49 +1,88 @@
-import { generateMockUsers } from '../mocks/mockingUsers.js';
-import { generateMockPets } from '../mocks/mockingPets.js';
-import { usersRepository, petsRepository } from '../repository/index.js';
+import { generateMockUsers } from "../mocks/mockingUsers.js";
+import { generateMockPets } from "../mocks/mockingPets.js";
+import { usersService, petsService } from "../services/index.js";
 
-const getMockingPets = (req, res) => {
+// GET /api/mocks/mockingusers
+export const getMockingUsers = async (req, res) => {
   try {
-    const qty = parseInt(req.query.qty) || 100;
-    const pets = generateMockPets(qty);
-    res.status(200).json({ status: 'success', payload: pets });
-  } catch (err) {
-    res.status(500).json({ status: 'error', error: err.message });
+
+    const users = [];
+
+    for (let i = 0; i < 50; i++) {
+      users.push(generateMockUsers());
+    }
+
+    res.send({
+      status: "success",
+      payload: users
+    });
+
+  } catch (error) {
+    res.status(500).send({
+      status: "error",
+      error: error.message
+    });
   }
 };
 
-const getMockingUsers = (req, res) => {
+// GET /api/mocks/mockingpets
+export const getMockingPets = async (req, res) => {
   try {
-    const qty = parseInt(req.query.qty) || 50;
-    const users = generateMockUsers(qty);
-    res.status(200).json({ status: 'success', payload: users });
-  } catch (err) {
-    res.status(500).json({ status: 'error', error: err.message });
+
+    const pets = [];
+
+    for (let i = 0; i < 20; i++) {
+      pets.push(generateMockPets());
+    }
+
+    res.send({
+      status: "success",
+      payload: pets
+    });
+
+  } catch (error) {
+    res.status(500).send({
+      status: "error",
+      error: error.message
+    });
   }
 };
 
-const generateData = async (req, res) => {
+// POST /api/mocks/generateData
+export const generateData = async (req, res) => {
   try {
     const { users = 0, pets = 0 } = req.body;
 
-    if (isNaN(users) || isNaN(pets) || users < 0 || pets < 0) {
-      return res.status(400).json({ status: 'error', error: 'users and pets must be non-negative numbers' });
+    const usersArray = [];
+    const petsArray = [];
+
+    for (let i = 0; i < users; i++) {
+      usersArray.push(generateMockUsers());
     }
 
-    const mockUsers = generateMockUsers(Number(users));
-    const mockPets = generateMockPets(Number(pets));
+    for (let i = 0; i < pets; i++) {
+      petsArray.push(generateMockPets());
+    }
 
-    const insertedUsers = await Promise.all(mockUsers.map((u) => usersRepository.create(u)));
-    const insertedPets = await Promise.all(mockPets.map((p) => petsRepository.create(p)));
+    if (usersArray.length > 0) {
+      await usersService.insertMany(usersArray);
+    }
 
-    res.status(201).json({
-      status: 'success',
-      message: `${insertedUsers.length} users and ${insertedPets.length} pets inserted`,
-      payload: { users: insertedUsers, pets: insertedPets },
+    if (petsArray.length > 0) {
+      await petsService.insertMany(petsArray);
+    }
+
+    res.send({
+      status: "success",
+      message: "Mock data generated successfully",
+      insertedUsers: usersArray.length,
+      insertedPets: petsArray.length
     });
-  } catch (err) {
-    res.status(500).json({ status: 'error', error: err.message });
+
+  } catch (error) {
+    res.status(500).send({
+      status: "error",
+      error: error.message
+    });
   }
 };
-
-export default { getMockingPets, getMockingUsers, generateData };

@@ -11,7 +11,6 @@ import mocksRouter from './routes/mocks.router.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 8080;
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/adoptme';
 
 app.use(express.json());
@@ -23,12 +22,15 @@ app.use('/api/pets', petsRouter);
 app.use('/api/adoptions', adoptionsRouter);
 app.use('/api/mocks', mocksRouter);
 
-mongoose
-  .connect(MONGO_URL)
-  .then(() => {
+// Mongo connection
+export const connectDB = async () => {
+  try {
+    await mongoose.connect(MONGO_URL);
     console.log('✅ Connected to MongoDB');
-    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-  })
-  .catch((err) => console.error('❌ MongoDB connection error:', err));
+  } catch (error) {
+    console.error('❌ MongoDB connection error:', error);
+    process.exit(1);
+  }
+};
 
 export default app;

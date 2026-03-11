@@ -1,17 +1,17 @@
-import mongoose from "mongoose";
-import app from "./app.js";
+import app, { connectDB } from './app.js';
 
-const PORT = 8080;
-const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost:27017/coder-dabe3";
+const PORT = process.env.PORT || 8080;
 
-mongoose.connect(MONGO_URL)
-  .then(() => {
-    console.log("✅ MongoDB conectado");
+const startServer = async () => {
+  try {
+    await connectDB();
 
     app.listen(PORT, () => {
-      console.log(`🚀 Servidor escuchando en puerto ${PORT}`);
+      console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
     });
-  })
-  .catch(error => {
-    console.error("❌ Error conectando a MongoDB:", error.message);
-  });
+  } catch (error) {
+    console.error('❌ Error iniciando el servidor:', error);
+  }
+};
+
+startServer();

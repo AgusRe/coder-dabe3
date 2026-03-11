@@ -1,15 +1,20 @@
-import { Router } from 'express';
-import mocksController from '../controllers/mocks.controller.js';
+import { Router } from "express";
+
+import {
+  getMockingUsers,
+  getMockingPets,
+  generateData
+} from "../controllers/mocks.controller.js";
 
 const router = Router();
 
-// GET /api/mocks/mockingpets?qty=50
-router.get('/mockingpets', mocksController.getMockingPets);
+// Generar 50 usuarios mock
+router.get("/mockingusers", getMockingUsers);
 
-// GET /api/mocks/mockingusers?qty=50
-router.get('/mockingusers', mocksController.getMockingUsers);
+// Generar mascotas mock
+router.get("/mockingpets", getMockingPets);
 
-// POST /api/mocks/generateData  body: { users: 10, pets: 20 }
-router.post('/generateData', mocksController.generateData);
+// Generar e insertar datos en Mongo
+router.post("/generateData", generateData);
 
 export default router;
