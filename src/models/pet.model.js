@@ -1,13 +1,13 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const petSchema = new mongoose.Schema(
-  {
-    name: String,
-    specie: String,
-    age: Number,
-    adopted: Boolean
-  },
-  { timestamps: true }
-);
+const petSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  specie: { type: String, required: true },
+  birthDate: { type: String },
+  adopted: { type: Boolean, default: false },
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+  image: { type: String, default: '' },
+});
 
-export const PetModel = mongoose.model("pets", petSchema);
+const Pet = mongoose.model('Pet', petSchema);
+export default Pet;

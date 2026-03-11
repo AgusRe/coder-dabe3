@@ -1,15 +1,14 @@
-import { Router } from "express";
-import { PetModel } from "../models/pet.model.js";
+import { Router } from 'express';
+import petsController from '../controllers/pets.controller.js';
+import uploader from '../utils/uploader.js';
 
 const router = Router();
 
-router.get("/", async (req, res) => {
-  try {
-    const pets = await PetModel.find();
-    res.status(200).json({ status: "success", payload: pets });
-  } catch (error) {
-    res.status(500).json({ status: "error", error: error.message });
-  }
-});
+router.get('/', petsController.getAllPets);
+router.get('/:pid', petsController.getPetById);
+router.post('/', petsController.createPet);
+router.post('/withimage', uploader.single('image'), petsController.createPetWithImage);
+router.put('/:pid', petsController.updatePet);
+router.delete('/:pid', petsController.deletePet);
 
 export default router;

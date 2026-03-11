@@ -1,15 +1,12 @@
-import { Router } from "express";
-import { UserModel } from "../models/user.model.js";
+import { Router } from 'express';
+import usersController from '../controllers/users.controller.js';
 
 const router = Router();
 
-router.get("/", async (req, res) => {
-  try {
-    const users = await UserModel.find();
-    res.status(200).json({ status: "success", payload: users });
-  } catch (error) {
-    res.status(500).json({ status: "error", error: error.message });
-  }
-});
+router.get('/', usersController.getAllUsers);
+router.get('/:uid', usersController.getUserById);
+router.post('/', usersController.createUser);
+router.put('/:uid', usersController.updateUser);
+router.delete('/:uid', usersController.deleteUser);
 
 export default router;

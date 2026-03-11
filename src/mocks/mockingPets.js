@@ -1,12 +1,18 @@
-import { faker } from "@faker-js/faker";
+import { faker } from '@faker-js/faker';
 
-export const generateMockPets = (quantity = 1) => {
-  return Array.from({ length: quantity }, () => ({
-    name: faker.animal.petName(),
-    specie: faker.animal.type(),
-    age: faker.number.int({ min: 1, max: 15 }),
+const species = ['dog', 'cat', 'rabbit', 'bird', 'hamster', 'turtle'];
+
+export const generatePet = () => {
+  return {
+    name: faker.animal.petName ? faker.animal.petName() : faker.person.firstName(),
+    specie: faker.helpers.arrayElement(species),
+    birthDate: faker.date.past({ years: 10 }).toISOString().split('T')[0],
     adopted: false,
-    createdAt: new Date(),
-    updatedAt: new Date()
-  }));
+    owner: null,
+    image: faker.image.urlLoremFlickr({ category: 'animals' }),
+  };
+};
+
+export const generateMockPets = (qty = 100) => {
+  return Array.from({ length: qty }, generatePet);
 };
