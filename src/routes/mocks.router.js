@@ -1,5 +1,4 @@
 import { Router } from "express";
-
 import {
   getMockingUsers,
   getMockingPets,
@@ -8,13 +7,8 @@ import {
 
 const router = Router();
 
-// Generar 50 usuarios mock
 router.get("/mockingusers", getMockingUsers);
-
-// Generar mascotas mock
 router.get("/mockingpets", getMockingPets);
-
-// Generar e insertar datos en Mongo
 router.post("/generateData", generateData);
 
 export default router;
