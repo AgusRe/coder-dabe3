@@ -1,18 +1,34 @@
 # 📦 Desarrollo Backend 3 – Testing y Escalabilidad Backend
 
-Este proyecto forma parte de la cursada **Desarrollo de Backend 3** (Coderhouse) y tiene como objetivo profundizar el diseño de APIs profesionales utilizando **Node.js**, **Express** y **MongoDB**, aplicando buenas prácticas de arquitectura, modularización, mocking de datos y persistencia en base de datos.
+Este proyecto forma parte de la cursada **Desarrollo de Backend 3** (Coderhouse) y tiene como objetivo profundizar el diseño de APIs profesionales utilizando **Node.js**, **Express** y **MongoDB**, aplicando buenas prácticas de arquitectura, modularización, testing funcional y containerización con Docker.
 
-El foco principal de esta entrega está puesto en la **generación de datos mockeados**, la correcta **separación de responsabilidades** y la creación de endpoints preparados para entornos de testing y desarrollo.
+---
+
+## 🐳 Imagen en DockerHub
+
+La imagen del proyecto está disponible públicamente en DockerHub:
+
+🔗 **https://hub.docker.com/r/agusinre/coder-dabe3**
+
+Para correr el proyecto directamente desde la imagen:
+
+```bash
+docker pull agusinre/coder-dabe3
+docker run -p 8080:8080 -e MONGO_URL=<tu_mongo_url> agusinre/coder-dabe3
+```
 
 ---
 
 ## 🚀 Tecnologías utilizadas
 
-- **Node.js**
+- **Node.js 20**
 - **Express**
 - **MongoDB + Mongoose**
 - **Faker.js**
 - **bcrypt**
+- **JWT**
+- **Chai + Supertest + Mocha** (testing)
+- **Docker**
 - **JavaScript (ES Modules)**
 
 ---
@@ -22,113 +38,176 @@ El foco principal de esta entrega está puesto en la **generación de datos mock
 ```
 src/
 │
-├── routes/
-│   └── mocks.router.js
-│   └── pets.router.js
-│   └── users.router.js
+├── controllers/
+│   ├── adoptions.controller.js
+│   ├── pets.controller.js
+│   ├── sessions.controller.js
+│   └── users.controller.js
+│
+├── dao/
+│   ├── mongo/
+│   │   ├── adoptions.dao.js
+│   │   ├── pets.dao.js
+│   │   └── users.dao.js
+│   ├── Adoption.js
+│   ├── Pets.dao.js
+│   └── Users.dao.js
+│
+├── dto/
+│   └── User.dto.js
 │
 ├── mocks/
-│   ├── mockingUsers.js
-│   └── mockingPets.js
+│   ├── mockingPets.js
+│   └── mockingUsers.js
 │
 ├── models/
-│   ├── user.model.js
-│   └── pet.model.js
+│   ├── adoption.model.js
+│   ├── pet.model.js
+│   └── user.model.js
+│
+├── repository/
+│   ├── AdoptionRepository.js
+│   ├── GenericRepository.js
+│   ├── index.js
+│   ├── PetRepository.js
+│   └── UserRepository.js
+│
+├── routes/
+│   ├── adoption.router.js
+│   ├── mocks.router.js
+│   ├── pets.router.js
+│   ├── sessions.router.js
+│   └── users.router.js
+│
+├── services/
+│   ├── adoptions.service.js
+│   └── index.js
 │
 ├── utils/
-│   └── bcrypt.js
+│   └── index.js
 │
 ├── app.js
 └── server.js
+
+test/
+└── adoption.test.js
 ```
-
----
-
-## 🧠 Objetivo del proyecto
-
-El proyecto busca:
-
-- Implementar **módulos de mocking** para usuarios y mascotas.
-- Simular respuestas realistas con formato de MongoDB.
-- Insertar datos de prueba directamente en la base de datos.
-- Facilitar entornos de testing sin depender de datos reales.
-- Respetar buenas prácticas de desarrollo backend.
 
 ---
 
 ## 🧩 Endpoints disponibles
 
+### `/api/adoptions`
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/adoptions` | Obtener todas las adopciones |
+| GET | `/api/adoptions/:aid` | Obtener adopción por ID |
+| POST | `/api/adoptions/:uid/:pid` | Crear una adopción |
+
+### `/api/sessions`
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| POST | `/api/sessions/register` | Registrar usuario |
+| POST | `/api/sessions/login` | Iniciar sesión |
+| GET | `/api/sessions/current` | Obtener usuario actual (JWT) |
+
+### `/api/pets`
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/pets` | Obtener todas las mascotas |
+| POST | `/api/pets` | Crear mascota |
+
+### `/api/users`
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/users` | Obtener todos los usuarios |
+| GET | `/api/users/:uid` | Obtener usuario por ID |
+
 ### `/api/mocks`
 
-- **GET** `/api/mocks/mockingpets`
-- **GET** `/api/mocks/mockingusers`
-- **POST** `/api/mocks/generateData`
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/mocks/mockingpets` | Generar mascotas mockeadas |
+| GET | `/api/mocks/mockingusers` | Generar usuarios mockeados |
+| POST | `/api/mocks/generateData` | Insertar datos mock en DB |
 
 ---
 
-## 🧩 Funcionalidades principales
+## 🧪 Tests funcionales
 
-### 🔹 Router `/api/mocks`
+Los tests cubren todos los endpoints del router `adoption.router.js`:
 
-Se creó un router específico para manejar todo lo relacionado al mocking de datos.
+```bash
+npm test
+```
 
-#### 📌 GET `/api/mocks/mockingpets`
-
-- Devuelve una lista de mascotas mockeadas.
-- No persiste datos en la base de datos.
-
-#### 📌 GET `/api/mocks/mockingusers`
-
-- Genera **50 usuarios mockeados**.
-- Cada usuario contiene:
-  - `password` encriptada con bcrypt (`coder123`)
-  - `role` aleatorio (`user` o `admin`)
-  - `pets` como array vacío
-- Devuelve el formato esperado por MongoDB.
-
-#### 📌 POST `/api/mocks/generateData`
-
-- Recibe parámetros numéricos `users` y `pets`.
-- Genera e inserta la cantidad indicada en la base de datos.
-- Permite validar la persistencia mediante los endpoints reales de users y pets.
-
-Ejemplo de body:
-```json
-{
-  "users": 10,
-  "pets": 20
-}
+Resultados esperados:
+```
+✔ GET /api/adoptions debe devolver todas las adopciones
+✔ Crear usuario para el test
+✔ Crear mascota para el test
+✔ POST /api/adoptions/:uid/:pid debe crear una adopción
+✔ GET /api/adoptions/:aid debe obtener una adopción por id
+5 passing
 ```
 
 ---
 
-## 🔐 Seguridad
+## 🐳 Docker
 
-- Las contraseñas de los usuarios mockeados se generan encriptadas usando **bcrypt**.
-- El hash está encapsulado en un helper para facilitar su reutilización y mantenimiento.
-
----
-
-## 🧪 Verificación de datos
-
-Una vez ejecutado el endpoint `/generateData`, los datos pueden verificarse mediante:
-
-- `GET /api/users`
-- `GET /api/pets`
-
-Confirmando así que los registros fueron correctamente insertados en MongoDB.
-
----
-
-## ⚙️ Instalación
-
-1. Clonar el repositorio
-2. Ejecutar `npm install`
-3. Configurar variable de entorno MONGO_URL (opcional)
-4. Ejecutar `npm run dev`
+### Construir la imagen localmente
 
 ```bash
+docker build -t coder-dabe3 .
+```
+
+### Correr el contenedor
+
+```bash
+docker run -p 8080:8080 -e MONGO_URL=<tu_mongo_url> coder-dabe3
+```
+
+> ⚠️ Al correr en Docker, `MONGO_URL=mongodb://localhost:27017/...` **no funciona** porque localhost apunta al contenedor.  
+> Usá una URL de **MongoDB Atlas** o configurá una red Docker con un contenedor de Mongo.
+
+### Usar con MongoDB Atlas
+
+1. Creá un cluster gratuito en https://cloud.mongodb.com
+2. Copiá la connection string
+3. Pasala como variable de entorno:
+
+```bash
+docker run -p 8080:8080 \
+  -e MONGO_URL=mongodb+srv://usuario:password@cluster.mongodb.net/coder-dabe3 \
+  agusinre/coder-dabe3
+```
+
+### Variables de entorno
+
+| Variable | Descripción | Default |
+|----------|-------------|---------|
+| `MONGO_URL` | URL de conexión a MongoDB | `mongodb://localhost:27017/coder-dabe3` |
+| `PORT` | Puerto del servidor | `8080` |
+
+---
+
+## ⚙️ Instalación local
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/AgusRe/coder-dabe3
+
+# 2. Instalar dependencias
 npm install
+
+# 3. Configurar variables de entorno
+cp .env.example .env  # editar con tus valores
+
+# 4. Correr en desarrollo
 npm run dev
 ```
 
@@ -137,4 +216,5 @@ npm run dev
 ## 👨‍💻 Autor
 
 Proyecto desarrollado por **Agustín Ré**  
-Curso: **Desarrollo Backend 3 – Coderhouse**
+Curso: **Desarrollo Backend 3 – Coderhouse**  
+GitHub: [@AgusRe](https://github.com/AgusRe)

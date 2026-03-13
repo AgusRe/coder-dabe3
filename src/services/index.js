@@ -1,11 +1,11 @@
-import Users from "../dao/Users.dao.js";
-import Pet from "../dao/Pets.dao.js";
-import Adoption from "../dao/Adoption.js";
+import usersDao from '../dao/mongo/users.dao.js';
+import petsDao from '../dao/mongo/pets.dao.js';
+import adoptionsDao from '../dao/mongo/adoptions.dao.js';
 
 import UserRepository from "../repository/UserRepository.js";
 import PetRepository from "../repository/PetRepository.js";
 import AdoptionRepository from "../repository/AdoptionRepository.js";
 
-export const usersService = new UserRepository(new Users());
-export const petsService = new PetRepository(new Pet());
-export const adoptionsService = new AdoptionRepository(new Adoption());
+export const usersService = new UserRepository(usersDao);
+export const petsService = new PetRepository(petsDao);
+export const adoptionsService = new AdoptionRepository(adoptionsDao);

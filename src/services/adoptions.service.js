@@ -1,4 +1,4 @@
-import { adoptionsRepository, usersRepository, petsRepository } from '../repository/index.js';
+import { usersRepository, petsRepository, adoptionsRepository } from '../repository/index.js';
 
 const getAllAdoptions = () => adoptionsRepository.getAll();
 

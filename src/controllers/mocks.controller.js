@@ -5,41 +5,22 @@ import { usersService, petsService } from "../services/index.js";
 // GET /api/mocks/mockingusers
 export const getMockingUsers = async (req, res) => {
   try {
-
-    const users = [];
-
-    for (let i = 0; i < 50; i++) {
-      users.push(generateMockUsers());
-    }
-
-    res.send({
-      status: "success",
-      payload: users
-    });
-
+    const users = generateMockUsers(20);
+    res.send(users);
   } catch (error) {
-    res.status(500).send({
+    res.status(500).send({ 
       status: "error",
-      error: error.message
+      error: error.message 
     });
   }
 };
 
+
 // GET /api/mocks/mockingpets
 export const getMockingPets = async (req, res) => {
   try {
-
-    const pets = [];
-
-    for (let i = 0; i < 20; i++) {
-      pets.push(generateMockPets());
-    }
-
-    res.send({
-      status: "success",
-      payload: pets
-    });
-
+    const pets = generateMockPets(20);
+    res.send(pets);
   } catch (error) {
     res.status(500).send({
       status: "error",
@@ -52,17 +33,8 @@ export const getMockingPets = async (req, res) => {
 export const generateData = async (req, res) => {
   try {
     const { users = 0, pets = 0 } = req.body;
-
-    const usersArray = [];
-    const petsArray = [];
-
-    for (let i = 0; i < users; i++) {
-      usersArray.push(generateMockUsers());
-    }
-
-    for (let i = 0; i < pets; i++) {
-      petsArray.push(generateMockPets());
-    }
+    const usersArray = generateMockUsers(users);
+    const petsArray = generateMockPets(pets);
 
     if (usersArray.length > 0) {
       await usersService.insertMany(usersArray);
@@ -86,3 +58,4 @@ export const generateData = async (req, res) => {
     });
   }
 };
+

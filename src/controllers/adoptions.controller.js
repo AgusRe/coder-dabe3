@@ -26,6 +26,7 @@ const createAdoption = async (req, res) => {
     const adoption = await adoptionsService.createAdoption(uid, pid);
     res.status(201).json({ status: 'success', payload: adoption });
   } catch (err) {
+    console.error('ERROR CONTROLLER:', err.message); // ← agregá esto
     const code = err.message.includes('not found') ? 404 : 400;
     res.status(code).json({ status: 'error', error: err.message });
   }

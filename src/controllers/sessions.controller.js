@@ -6,21 +6,31 @@ import UserDTO from '../dto/User.dto.js';
 const register = async (req, res) => {
     try {
         const { first_name, last_name, email, password } = req.body;
-        if (!first_name || !last_name || !email || !password) return res.status(400).send({ status: "error", error: "Incomplete values" });
+
+        if (!first_name || !last_name || !email || !password)
+            return res.status(400).send({ status: "error", error: "Incomplete values" });
+
         const exists = await usersService.getUserByEmail(email);
-        if (exists) return res.status(400).send({ status: "error", error: "User already exists" });
+
+        if (exists)
+            return res.status(400).send({ status: "error", error: "User already exists" });
+
         const hashedPassword = await createHash(password);
+
         const user = {
             first_name,
             last_name,
             email,
             password: hashedPassword
         }
-        let result = await usersService.create(user);
-        console.log(result);
-        res.send({ status: "success", payload: result._id });
-    } catch (error) {
 
+        let result = await usersService.create(user);
+
+        res.send({ status: "success", payload: result._id });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ status: "error", error: error.message });
     }
 }
 
@@ -60,7 +70,6 @@ const unprotectedCurrent = async(req,res)=>{
         return res.send({status:"success",payload:user})
 }
 export default {
-    current,
     login,
     register,
     current,
